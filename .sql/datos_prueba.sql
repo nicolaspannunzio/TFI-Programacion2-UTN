@@ -7,15 +7,15 @@ USE `tpi-bd-i`;
 /* ======================= LIMPIEZA PREVIA ======================== */
 /* ================================================================ */
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE usuarios;
-TRUNCATE TABLE credencialesacceso;
+TRUNCATE TABLE usuario; -- <-- CORREGIDO (singular)
+TRUNCATE TABLE credencialacceso; -- <-- CORREGIDO (singular)
 SET FOREIGN_KEY_CHECKS = 1;
 
 
 /* ===========================  (1)  ============================== */
 /* ====================== INSERCIÓN DE DATOS ====================== */
 /* ================================================================ */
-INSERT INTO credencialesacceso 
+INSERT INTO credencialacceso 
     (id_CredencialAcceso, eliminado, hashPassword, salt, ultimoCambio, requiereReset)
 VALUES
     -- Fila 1 (Será para el admin)
@@ -30,9 +30,12 @@ VALUES
 
 /* ===========================  (2)  ============================== */
 /* ================ Creamos 3 usuarios y los vinculamos 
-						a las credenciales creadas ================ */
+                        a las credenciales creadas ================ */
 /* ================================================================ */
-INSERT INTO usuarios 
+--
+-- CAMBIO: El nombre de la tabla ahora es 'usuario' (singular)
+--
+INSERT INTO usuario 
     (id, eliminado, username, email, activo, fechaRegistro, id_CredencialAcceso)
 VALUES
     -- Usuario 1 (Admin, vinculado a credencial 1)
@@ -48,12 +51,14 @@ VALUES
 /* ===========================  (3)  ============================== */
 /* ============== VERIFICACIÓN DE LA RELACIÓN 1-A-1 =============== */
 /* ================================================================ */
+--
+-- CAMBIO: El nombre de la tabla ahora es 'usuario' (singular)
+--
 SELECT
     u.id AS usuario_id,
     u.username,
     u.eliminado AS usuario_eliminado,
     c.id_CredencialAcceso AS credencial_id,
     c.eliminado AS credencial_eliminada
-FROM usuarios u
-JOIN credencialesacceso c ON u.id_CredencialAcceso = c.id_CredencialAcceso;
-
+FROM usuario u -- <-- CORREGIDO
+JOIN credencialacceso c ON u.id_CredencialAcceso = c.id_CredencialAcceso;
